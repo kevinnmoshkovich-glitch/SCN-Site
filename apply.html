@@ -196,8 +196,8 @@
 <script src="i18n.js"></script>
 <script>
 /* Same envelope as the refill portal: AES-GCM payload, key wrapped with the
-   store's RSA public key. Encrypted before it leaves this device. */
-const PUB_KEY_B64 = 'MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAvmGqbFmirSytH921UnBc7xzmzxoLgSPVvF3I12Zsq0fJrlYp94UdYzJ9c43zujm/fBq68sSEs+g1c86E30Y2YSCaG5ZbQmoO8/uLYbaYbULaloKVbPY2EJCmn3sdT3ZBmj1EXe9HybP2eM+uJ94HNAU1qNTeNI5+mFvYBH909AEtQ9QV+haIcds6/PmeQAQWzttbGQQMTf7JXu3Dx3+brWuXXYGIXbU0eeovUnURxQOryTaHSUjTu/77kzoB3SJcn8MFIADhDi5m2a4Z4cKz3oaVEd5MWid9b57CIi3ESkNK5WzFfKrseDlVm5ogWFJWi0d9GiAiqy6x2CCrAHSBjbgooqX2H/JUgmdIXU1Yuz5kSCMbb+cckNatFglq9pjnXivPpRKs9onj261VDvK63iwZfd7C0YLzWjwYcJw2fPM83icKD6zqLfKyH8yzfS2MZ2beE9NluETVDolFq6Yi7blN5eeY0+RgTdng03g9m0XUhMenPoOy/ipd5kNfeKMaPEIqdXQmYSrbR2zvUnQ4bJVJfB5qsaH/V5qR/05JCQcK4YwkRiBkuB3f0cRvRptho4XMtrP3DrfvwSVRLooHTnT+498Z2tuv/ijTzhfIR+pQKDxzZrVmjyW7boJsaHsQpUGKiAHwnv+DgCH1DONsD5aXRw2XlXE24VkhVbpg7BUCAwEAAQ==';
+   SCN vault public key. Encrypted before it leaves this device. */
+const PUB_KEY_B64 = 'MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA8YGX/R7rJyPSnSsyuN2RxHLF+8fs1LaANZ80UEBlJPHuNLUGp+8NuLlbrqPMBgdmmdU+2ZAzaAkMpD471BjdnbPXA0HnL7GZAy1WOX/KUO6k7OVYp7CkvCnTUfObEw5LJDNnC4mbKal4ZaJoQ/NOzwtsJeB/WLLOVDc2UBw8G7wXL+CDEqQO/umDwvN/0/t7TGw3iMpvrZbTONenZsYWXwEHYNlteY8SsVdSEIcBsiBrcyURhpkSsXKpzKI/QLHa8M9b73OX9jh0s7gHuGswwSzofg9SkLLq+gjdyVPdvFUB/CkMZQrfK5K50V6QsCiUMMwGs8fbeV0roFoDpj6QF/pBhgvNUAO6ZjEH3eyDZIccfXB3rGExkMJDhbiexvHVKUEf8SrSJNi2MA3s+viCxrYvDWChgJouG13QwLYJyWVDYXdVHho8wuds1oeYWzeC+vUA7GXB3pPo8lx3zE6aI/6AWYoFY+VSVIuWJc7uuWrG2LCgfRrOJBSo5Y/AY5RmOmAoAn8O5PDyykneEeXaS77rchoDhTY7wY89xqikpLE0s8wv2f0E8bAdITon52o3NoYK9LOUxc2f3AUA7MhBq5cXuXocX+ynAeb6Q86ZLh4rRfXByXAdtnh6/0YBTvI3y/LFhgCi23LJ3c8guxjzGDsiQKqOU38wgNZJe4IStp0CAwEAAQ==';
 const FN = 'https://airmehkgolmtgctmhqaq.supabase.co/functions/v1';
 const b64ToBuf = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
 const bufToB64 = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));

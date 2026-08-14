@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owner Console — Fine Care Food Support</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800;12..96,900&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .admin { max-width:880px; margin:0 auto; padding:34px 20px 90px; }
+  .aheadline { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
+  .aheadline h2 { margin:0; }
+  .aheadline .grow { flex:1; }
+  .linkbtn { border:none; background:none; font-weight:700; color:var(--blue); text-decoration:underline; font-size:13px; }
+  .apps { display:flex; flex-direction:column; gap:10px; }
+  .approw { background:#fff; border:2px solid var(--ink); border-radius:14px; padding:14px 16px; display:flex; gap:14px; align-items:center; cursor:pointer; }
+  .approw:hover { box-shadow:4px 4px 0 var(--ink); transform:translate(-1px,-1px); }
+  .approw .who { flex:1; min-width:0; }
+  .approw .who b { font-size:15.5px; }
+  .approw .who .m { font-family:var(--mono); font-size:10px; letter-spacing:0.08em; color:#5b7290; margin-top:2px; }
+  .pill { font-family:var(--mono); font-size:9.5px; letter-spacing:0.1em; border:1.5px solid var(--ink); border-radius:999px; padding:4px 10px; white-space:nowrap; }
+  .pill.received { background:var(--wash); }
+  .pill.verified { background:var(--sky); }
+  .pill.approved { background:var(--orange); color:#fff; }
+  .pill.delivered { background:var(--ink); color:#fff; }
+  .pill.denied { background:#fff4ef; border-color:#a3330f; color:#a3330f; }
+  .empty { text-align:center; color:#5b7290; padding:40px 0; font-weight:600; }
+  .kv { display:flex; gap:12px; padding:7px 0; border-bottom:1.5px dashed var(--line); font-size:14px; }
+  .kv:last-child { border-bottom:none; }
+  .kv .k { font-family:var(--mono); font-size:10px; letter-spacing:0.08em; color:#5b7290; flex:0 0 175px; padding-top:3px; text-transform:uppercase; }
+  .kv .v { font-weight:600; overflow-wrap:anywhere; }
+  .sect { margin-top:22px; }
+  .sect .strip { margin-bottom:10px; }
+  .statusbar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:10px; }
+  .sbtn { border:2px solid var(--ink); background:#fff; border-radius:10px; padding:10px 16px; font-weight:700; font-size:13.5px; }
+  .sbtn.cur { background:var(--sky); }
+  .sbtn.denybtn { border-color:#a3330f; color:#a3330f; }
+  .sbtn.denybtn.cur { background:#a3330f; color:#fff; }
+  .sbtn[disabled] { opacity:.5; cursor:default; }
+  .memtable { width:100%; border-collapse:collapse; font-size:13.5px; margin-top:4px; }
+  .memtable th { font-family:var(--mono); font-size:9.5px; letter-spacing:0.08em; color:#5b7290; text-align:left; padding:4px 8px 4px 0; }
+  .memtable td { border-top:1.5px dashed var(--line); padding:7px 8px 7px 0; font-weight:600; }
+  .note-ok { color:#1c5c96; font-weight:700; font-size:13px; margin-top:10px; display:none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <a href="index.html"><img class="logo" src="fc-logo.png" alt="Fine Care Pharmacy"></a>
+    <div class="brand"><span>OWNER CONSOLE · FOOD SUPPORT PROGRAM</span></div>
+    <nav>
+      <button class="linkbtn" id="signOut" style="display:none">Sign out</button>
+    </nav>
+  </div>
+</header>
+
+<!-- LOGIN -->
+<div class="admin" id="loginView" style="display:none; max-width:460px">
+  <div class="strip">OWNER SIGN IN</div>
+  <h2 style="margin:14px 0 14px">Fine Care SCN Console</h2>
+  <div class="fcard">
+    <label style="margin-top:0">Email</label>
+    <input id="l_email" type="email" autocomplete="username" value="kevinn.m@finecarerx.com">
+    <label>Password</label>
+    <input id="l_pass" type="password" autocomplete="current-password">
+    <div class="hint">Same login as the Staff Hub.</div>
+    <div class="errline" id="l_err"></div>
+    <div class="wnav"><button type="button" class="cta" id="l_btn" style="font-size:15px; padding:12px 22px">Sign in</button></div>
+  </div>
+</div>
+
+<!-- VAULT UNLOCK -->
+<div class="admin" id="unlockView" style="display:none; max-width:460px">
+  <div class="strip">UNLOCK APPLICATIONS</div>
+  <h2 style="margin:14px 0 6px">Enter the vault code.</h2>
+  <p style="color:#334560; font-size:14px; margin-bottom:14px">Applications are encrypted — this code opens them in your browser only. The cloud never sees it.</p>
+  <div class="fcard">
+    <label style="margin-top:0">Vault code</label>
+    <input id="u_code" style="font-family:var(--mono); letter-spacing:1px" autocomplete="off" placeholder="word-word-0000">
+    <div class="checks"><label><input type="checkbox" id="u_remember" checked> Remember on this device</label></div>
+    <div class="errline" id="u_err"></div>
+    <div class="wnav"><button type="button" class="cta" id="u_btn" style="font-size:15px; padding:12px 22px">Unlock</button></div>
+  </div>
+</div>
+
+<!-- LIST -->
+<div class="admin" id="listView" style="display:none">
+  <div class="aheadline">
+    <div class="grow"><div class="strip">APPLICATIONS</div><h2 style="margin-top:12px">Food-support applications</h2></div>
+    <button class="ghost" id="refreshBtn" style="padding:10px 16px; font-size:14px">Refresh</button>
+  </div>
+  <div class="apps" id="appList"></div>
+  <div class="empty" id="emptyMsg" style="display:none">No applications yet — the moment one arrives you'll get an email, and it'll appear here.</div>
+</div>
+
+<!-- DETAIL -->
+<div class="admin" id="detailView" style="display:none">
+  <div class="aheadline">
+    <button class="ghost" id="backBtn" style="padding:9px 14px; font-size:14px">← All applications</button>
+    <div class="grow"></div>
+    <span class="pill" id="d_pill"></span>
+  </div>
+  <div class="ticket" style="margin-bottom:18px">
+    <div class="t-head"><span id="d_head"></span></div>
+    <div class="t-body" id="d_body"></div>
+  </div>
+  <div class="fcard">
+    <div class="strip">STATUS</div>
+    <div class="statusbar" id="statusBar"></div>
+    <div id="approveExtra" style="display:none; margin-top:12px">
+      <label style="margin-top:0">First delivery date (shows on the patient's tracker)</label>
+      <input type="date" id="d_firstDelivery" style="max-width:220px">
+    </div>
+    <div class="note-ok" id="d_saved">Saved — the patient's tracker updated.</div>
+    <div class="errline" id="d_err"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="fwrap">
+    <img src="fc-logo.png" alt="Fine Care Pharmacy" style="height:34px; width:auto">
+    <div class="grow">380 Knickerbocker Ave, Brooklyn, NY 11237 · (718) 676-9976</div>
+  </div>
+</footer>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const SB_URL = 'https://airmehkgolmtgctmhqaq.supabase.co';
+const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpcm1laGtnb2xtdGdjdG1ocWFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExODk3ODYsImV4cCI6MjA5Njc2NTc4Nn0.Ou0J-T4a1azNsu6SjYjeE2oK2Li1CMRLbjMHSV4-Buo';
+const FN = SB_URL + '/functions/v1';
+const sb = createClient(SB_URL, SB_ANON);
+const $ = (id) => document.getElementById(id);
+const b64ToBuf = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+
+let privKey = null;      // unwrapped RSA private key (memory only)
+let rows = [];           // [{row, app|null}]
+let current = null;      // selected entry
+const YN = (v) => (v === 'yes' ? 'Yes' : v === 'no' ? 'No' : '—');
+const dash = (v) => (v && String(v).trim() ? String(v).trim() : '—');
+const fmtMDY = (iso) => { const d = new Date(iso); return isNaN(d) ? '—' :
+  `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}/${d.getFullYear()}`; };
+const fmtYMD = (ymd) => { if (!ymd) return '—'; const [y, m, d] = ymd.split('-'); return `${m}/${d}/${y}`; };
+
+function show(view) {
+  ['loginView', 'unlockView', 'listView', 'detailView'].forEach((v) => { $(v).style.display = v === view ? '' : 'none'; });
+  $('signOut').style.display = view === 'loginView' ? 'none' : '';
+}
+
+/* ---------- auth ---------- */
+async function callAdmin(body) {
+  const { data: s } = await sb.auth.getSession();
+  const token = s?.session?.access_token;
+  if (!token) throw new Error('no_session');
+  const r = await fetch(FN + '/scn-admin', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+    body: JSON.stringify(body),
+  });
+  const j = await r.json();
+  if (!j.ok) throw new Error(j.error || 'request');
+  return j;
+}
+
+$('l_btn').addEventListener('click', async () => {
+  $('l_err').classList.remove('on');
+  $('l_btn').setAttribute('aria-disabled', 'true');
+  const { error } = await sb.auth.signInWithPassword({ email: $('l_email').value.trim(), password: $('l_pass').value });
+  $('l_btn').removeAttribute('aria-disabled');
+  if (error) { $('l_err').textContent = 'Sign-in failed — check the email and password.'; $('l_err').classList.add('on'); return; }
+  proceedAfterAuth();
+});
+$('l_pass').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('l_btn').click(); });
+$('signOut').addEventListener('click', async () => {
+  await sb.auth.signOut(); privKey = null; rows = [];
+  try { localStorage.removeItem('scn_vault_code'); } catch (e) { /* private mode */ }
+  show('loginView');
+});
+
+/* ---------- vault ---------- */
+async function unlockWith(code) {
+  const { vault } = await callAdmin({ action: 'vault' });
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(code), 'PBKDF2', false, ['deriveKey']);
+  const aes = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: b64ToBuf(vault.wrap_salt), iterations: vault.wrap_iters, hash: 'SHA-256' },
+    base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  const pkcs8 = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64ToBuf(vault.wrap_iv) }, aes, b64ToBuf(vault.wrapped_priv));
+  privKey = await crypto.subtle.importKey('pkcs8', pkcs8, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']);
+}
+
+$('u_btn').addEventListener('click', async () => {
+  $('u_err').classList.remove('on');
+  const code = $('u_code').value.trim();
+  if (!code) { $('u_code').classList.add('bad'); return; }
+  $('u_btn').setAttribute('aria-disabled', 'true');
+  $('u_btn').innerHTML = '<span class="spin"></span>Unlocking…';
+  try {
+    await unlockWith(code);
+    if ($('u_remember').checked) { try { localStorage.setItem('scn_vault_code', code); } catch (e) { /* private */ } }
+    await loadList();
+    show('listView');
+  } catch (e) {
+    $('u_err').textContent = 'That code didn\u2019t open the vault — check it and try again.';
+    $('u_err').classList.add('on');
+  }
+  $('u_btn').removeAttribute('aria-disabled');
+  $('u_btn').textContent = 'Unlock';
+});
+$('u_code').addEventListener('input', () => $('u_code').classList.remove('bad'));
+$('u_code').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('u_btn').click(); });
+
+async function proceedAfterAuth() {
+  let saved = null;
+  try { saved = localStorage.getItem('scn_vault_code'); } catch (e) { /* private */ }
+  if (saved) {
+    try { await unlockWith(saved); await loadList(); show('listView'); return; }
+    catch (e) { try { localStorage.removeItem('scn_vault_code'); } catch (e2) { /* private */ } }
+  }
+  show('unlockView');
+  setTimeout(() => $('u_code').focus(), 50);
+}
+
+/* ---------- decrypt + list ---------- */
+async function decryptApp(ciphertext) {
+  const env = JSON.parse(ciphertext);
+  const aesRaw = await crypto.subtle.decrypt({ name: 'RSA-OAEP' }, privKey, b64ToBuf(env.k));
+  const aesKey = await crypto.subtle.importKey('raw', aesRaw, { name: 'AES-GCM' }, false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64ToBuf(env.iv) }, aesKey, b64ToBuf(env.d));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+
+async function loadList() {
+  const { rows: raw } = await callAdmin({ action: 'list' });
+  rows = await Promise.all(raw.map(async (row) => {
+    let app = null;
+    if (row.ciphertext) { try { app = await decryptApp(row.ciphertext); } catch (e) { app = null; } }
+    return { row, app };
+  }));
+  renderList();
+}
+
+function renderList() {
+  const list = $('appList');
+  list.innerHTML = '';
+  $('emptyMsg').style.display = rows.length ? 'none' : '';
+  rows.forEach((entry, i) => {
+    const { row, app } = entry;
+    const div = document.createElement('div');
+    div.className = 'approw';
+    const who = document.createElement('div'); who.className = 'who';
+    const name = document.createElement('b');
+    name.textContent = app ? `${app.applicant.first} ${app.applicant.last}` : '(can\u2019t decrypt)';
+    const meta = document.createElement('div'); meta.className = 'm';
+    meta.textContent = `${row.ref_code} \u00b7 ${fmtMDY(row.created_at)}${app ? ' \u00b7 ' + dash(app.applicant.phone) : ''}${row.lang === 'es' ? ' \u00b7 ES' : ''}`;
+    who.appendChild(name); who.appendChild(meta);
+    const pill = document.createElement('span');
+    pill.className = 'pill ' + row.status; pill.textContent = row.status.toUpperCase();
+    div.appendChild(who); div.appendChild(pill);
+    div.addEventListener('click', () => openDetail(i));
+    list.appendChild(div);
+  });
+}
+$('refreshBtn').addEventListener('click', loadList);
+$('backBtn').addEventListener('click', () => { current = null; renderList(); show('listView'); });
+
+/* ---------- detail ---------- */
+function kv(label, value) {
+  const d = document.createElement('div'); d.className = 'kv';
+  const k = document.createElement('span'); k.className = 'k'; k.textContent = label;
+  const v = document.createElement('span'); v.className = 'v'; v.textContent = value;
+  d.appendChild(k); d.appendChild(v); return d;
+}
+function section(parent, title) {
+  const s = document.createElement('div'); s.className = 'sect';
+  const strip = document.createElement('span'); strip.className = 'strip'; strip.textContent = title;
+  s.appendChild(strip); parent.appendChild(s); return s;
+}
+const PROB = { pests: 'Pests', mold: 'Mold', lead: 'Lead paint/pipes', heat: 'No heat', stove: 'Oven/stove broken', smoke: 'Smoke detectors', leaks: 'Water leaks', fridge: 'Refrigerator issues', none: 'None' };
+
+function openDetail(i) {
+  current = rows[i];
+  const { row, app } = current;
+  $('d_head').textContent = 'FINE CARE FOOD SUPPORT \u00b7 ' + row.ref_code;
+  $('d_pill').className = 'pill ' + row.status;
+  $('d_pill').textContent = row.status.toUpperCase();
+  const body = $('d_body');
+  body.innerHTML = '';
+  if (!app) {
+    body.appendChild(kv('STATUS', 'This application can\u2019t be decrypted with the current vault key.'));
+  } else {
+    const a = app.applicant;
+    body.appendChild(kv('APPLICANT', `${a.first} ${a.last}`));
+    body.appendChild(kv('DOB', fmtYMD(a.dob)));
+    body.appendChild(kv('CIN', dash(a.cin)));
+    body.appendChild(kv('PHONE', dash(a.phone) + (a.smsConsent ? ' \u00b7 texts OK' : ' \u00b7 no texts')));
+    body.appendChild(kv('ADDRESS', `${dash(a.address)}, ${dash(a.cityStateZip)}`));
+    if (a.email) body.appendChild(kv('EMAIL', a.email));
+    body.appendChild(kv('SUBMITTED', fmtMDY(app.submittedAt) + (app.lang === 'es' ? ' \u00b7 Spanish' : '')));
+
+    const h = app.housing;
+    const sh = section(body, 'HOUSING');
+    sh.appendChild(kv('LIVING SITUATION', dash(h.living)));
+    sh.appendChild(kv('STRUGGLES TO PAY', YN(h.strugglesToPay)));
+    sh.appendChild(kv('UTILITY SHUTOFF THREAT', YN(h.utilityShutoffThreat)));
+    sh.appendChild(kv('HOME PROBLEMS', (h.problems || []).map((p) => PROB[p] || p).join(', ') || '—'));
+    sh.appendChild(kv('WAITLIST / SUBSIDY', YN(h.waitlistOrSubsidy)));
+
+    const b = app.benefits;
+    const sB = section(body, 'BENEFITS');
+    sB.appendChild(kv('SNAP / WIC / TANF', `${YN(b.snap)} / ${YN(b.wic)} / ${YN(b.tanf)}`));
+    sB.appendChild(kv('HEALTH HOME', YN(b.healthHome) + (b.healthHomeName ? ' \u2014 ' + b.healthHomeName : '')));
+    sB.appendChild(kv('WANTS JOB HELP', YN(b.jobHelp)));
+    sB.appendChild(kv('WANTS SCHOOL/TRAINING', YN(b.schoolHelp)));
+    sB.appendChild(kv('TRANSPORT BARRIER', YN(b.transportBarrier)));
+
+    const he = app.health;
+    const sHe = section(body, 'HEALTH');
+    sHe.appendChild(kv('CHRONIC CONDITIONS', YN(he.chronic) + (he.chronicDetail ? ' \u2014 ' + he.chronicDetail : '')));
+    sHe.appendChild(kv('FRIDGE MEDS', YN(he.fridgeMeds)));
+    sHe.appendChild(kv('PREGNANT / POSTPARTUM', YN(he.pregnant) + (he.dueDate ? ' \u2014 ' + fmtYMD(he.dueDate) : '')));
+    sHe.appendChild(kv('MOBILITY DIFFICULTY', YN(he.mobilityDifficulty)));
+
+    const f = app.food;
+    const sF = section(body, 'FOOD');
+    sF.appendChild(kv('ALREADY GETS MEALS', YN(f.existingMealsProgram)));
+    sF.appendChild(kv('ALLERGIES', YN(f.allergies) + (f.dietDetail ? ' \u2014 ' + f.dietDetail : '')));
+    sF.appendChild(kv('EQUIPMENT NEEDS', (f.equipmentNeeds || []).join(', ') || '—'));
+    sF.appendChild(kv('WORRIED FOOD RUNS OUT', YN(f.worryFoodRunOut)));
+    sF.appendChild(kv('FOOD DIDN\u2019T LAST', YN(f.foodDidNotLast)));
+    sF.appendChild(kv('MEAL PREFERENCE', dash(f.mealPreference)));
+
+    const sHh = section(body, 'HOUSEHOLD');
+    const members = (app.household && app.household.members) || [];
+    if (members.length) {
+      const tbl = document.createElement('table'); tbl.className = 'memtable';
+      tbl.innerHTML = '<tr><th>Name</th><th>CIN</th><th>DOB</th><th>Relationship</th></tr>';
+      members.forEach((m) => {
+        const tr = document.createElement('tr');
+        [m.name, m.cin, fmtYMD(m.dob), m.relationship].forEach((val) => {
+          const td = document.createElement('td'); td.textContent = dash(val); tr.appendChild(td);
+        });
+        tbl.appendChild(tr);
+      });
+      sHh.appendChild(tbl);
+    } else { sHh.appendChild(kv('MEMBERS', '—')); }
+    sHh.appendChild(kv('TRANSFER', YN(app.household && app.household.transfer)));
+    if (app.household && app.household.comments) sHh.appendChild(kv('COMMENTS', app.household.comments));
+  }
+
+  const sT = section(body, 'TIMELINE');
+  (row.status_history || []).forEach((hh) => sT.appendChild(kv(hh.status.toUpperCase(), fmtMDY(hh.at))));
+
+  renderStatusBar();
+  $('d_saved').style.display = 'none';
+  $('d_err').classList.remove('on');
+  show('detailView');
+  window.scrollTo({ top: 0 });
+}
+
+function renderStatusBar() {
+  const bar = $('statusBar');
+  bar.innerHTML = '';
+  const { row } = current;
+  [['verified', 'Coverage verified'], ['approved', 'Approved'], ['delivered', 'Delivered'], ['denied', 'Deny']].forEach(([st, label]) => {
+    const btn = document.createElement('button');
+    btn.className = 'sbtn' + (st === 'denied' ? ' denybtn' : '') + (row.status === st ? ' cur' : '');
+    btn.textContent = label;
+    btn.addEventListener('click', () => setStatus(st));
+    bar.appendChild(btn);
+  });
+  $('approveExtra').style.display = row.status === 'approved' ? '' : 'none';
+  $('d_firstDelivery').value = row.first_delivery || '';
+}
+
+let denyArmed = false;
+async function setStatus(st) {
+  const { row } = current;
+  $('d_err').classList.remove('on'); $('d_saved').style.display = 'none';
+  if (st === 'denied' && row.status !== 'denied' && !denyArmed) {
+    denyArmed = true;
+    const btn = [...$('statusBar').children].find((x) => x.classList.contains('denybtn'));
+    if (btn) btn.textContent = 'Tap again to deny';
+    setTimeout(() => { denyArmed = false; if (btn) btn.textContent = 'Deny'; }, 3000);
+    return;
+  }
+  denyArmed = false;
+  let firstDelivery = null;
+  if (st === 'approved') {
+    $('approveExtra').style.display = '';
+    firstDelivery = $('d_firstDelivery').value || null;
+  }
+  try {
+    await callAdmin({ action: 'setStatus', id: row.id, status: st, firstDelivery });
+    row.status = st;
+    if (st === 'approved') row.first_delivery = firstDelivery;
+    row.status_history = (row.status_history || []).concat([{ status: st, at: new Date().toISOString() }]);
+    $('d_pill').className = 'pill ' + st; $('d_pill').textContent = st.toUpperCase();
+    renderStatusBar();
+    $('d_saved').style.display = 'block';
+  } catch (e) {
+    $('d_err').textContent = 'Couldn\u2019t save — try again.'; $('d_err').classList.add('on');
+  }
+}
+$('d_firstDelivery').addEventListener('change', () => {
+  if (current && current.row.status === 'approved') setStatus('approved');
+});
+
+/* ---------- boot ---------- */
+(async () => {
+  const { data } = await sb.auth.getSession();
+  if (data?.session) proceedAfterAuth(); else show('loginView');
+})();
+</script>
+</body>
+</html>
