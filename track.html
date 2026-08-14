@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track — Fine Care Food Support</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800;12..96,900&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <a href="index.html"><img class="logo" src="fc-logo.png" alt="Fine Care Pharmacy"></a>
+    <div class="brand"><span data-i18n="tagline"></span></div>
+    <nav>
+      <a class="nl" href="index.html" data-i18n="nav_home"></a>
+      <a class="nl" href="apply.html" data-i18n="nav_apply"></a>
+      <a class="nl on" href="track.html" data-i18n="nav_track"></a>
+      <div class="lang"><button data-lang="en">EN</button><button data-lang="es">ES</button></div>
+    </nav>
+  </div>
+</header>
+
+<div class="track">
+  <div class="strip" data-i18n="tr_strip"></div>
+  <h2 style="margin:14px 0 6px" data-i18n="tr_h2"></h2>
+  <p style="color:#334560; font-size:14.5px; margin-bottom:18px" data-i18n="tr_p"></p>
+
+  <div class="fcard">
+    <label style="margin-top:0"><span data-i18n="tr_ref"></span> <span class="req">*</span></label>
+    <input id="t_ref" placeholder="FC-2026-00000" style="font-family:var(--mono); letter-spacing:2px; text-transform:uppercase" autocapitalize="characters">
+    <label><span data-i18n="tr_dob"></span> <span class="req">*</span></label>
+    <input id="t_dob" type="date">
+    <div class="errline" id="t_err"></div>
+    <div class="wnav">
+      <button type="button" class="cta" id="t_btn" style="font-size:15px; padding:12px 22px"></button>
+    </div>
+  </div>
+
+  <div id="result" style="display:none; margin-top:24px">
+    <div class="ticket">
+      <div class="t-head"><span id="r_head"></span></div>
+      <div class="t-body">
+        <div class="tl" id="timeline"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="fwrap">
+    <img src="fc-logo.png" alt="Fine Care Pharmacy" style="height:34px; width:auto">
+    <div class="grow">380 Knickerbocker Ave, Brooklyn, NY 11237 · (718) 676-9976<br><span data-i18n="foot_tag"></span></div>
+    <div class="flinks"><a href="#" data-i18n="foot_privacy"></a><a href="#" data-i18n="foot_sms"></a><a href="index.html" data-i18n="nav_home"></a></div>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script>
+const FN = 'https://airmehkgolmtgctmhqaq.supabase.co/functions/v1';
+const $ = (id) => document.getElementById(id);
+const ORDER = ['received', 'verified', 'approved', 'delivered'];
+let lastResult = null;
+
+function fmtDate(iso) {
+  try {
+    return new Date(iso).toLocaleDateString(LANG === 'es' ? 'es-US' : 'en-US',
+      { month: 'short', day: 'numeric', year: 'numeric' });
+  } catch (e) { return ''; }
+}
+function fmtDay(ymd) {
+  try {
+    const [y, m, d] = ymd.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString(LANG === 'es' ? 'es-US' : 'en-US',
+      { weekday: 'long', month: 'long', day: 'numeric' });
+  } catch (e) { return ymd; }
+}
+
+function stepCopy(status, data) {
+  if (status === 'approved' && data.firstDelivery) {
+    return t('st_approved_sched').replace('{d}', fmtDay(data.firstDelivery));
+  }
+  return t('st_' + status + '_p');
+}
+
+function render(data) {
+  lastResult = data;
+  $('result').style.display = '';
+  $('r_head').textContent = 'FINE CARE FOOD SUPPORT · ' + data.ref;
+  const tl = $('timeline');
+  tl.innerHTML = '';
+  if (data.status === 'denied') {
+    const div = document.createElement('div');
+    div.className = 'denied';
+    div.textContent = t('st_denied');
+    tl.appendChild(div);
+    return;
+  }
+  const doneAt = {};
+  (data.history || []).forEach((h) => { if (!doneAt[h.status]) doneAt[h.status] = h.at; });
+  const curIdx = Math.max(0, ORDER.indexOf(data.status));
+  ORDER.forEach((st, i) => {
+    const cls = i < curIdx ? 'done' : (i === curIdx ? 'now' : 'future');
+    const row = document.createElement('div');
+    row.className = 'tstep ' + cls;
+    const rail = document.createElement('div'); rail.className = 'rail';
+    const node = document.createElement('div'); node.className = 'node';
+    node.textContent = i < curIdx ? '✓' : (i === curIdx ? '●' : '');
+    rail.appendChild(node);
+    if (i < ORDER.length - 1) { const cord = document.createElement('div'); cord.className = 'cord'; rail.appendChild(cord); }
+    const info = document.createElement('div'); info.className = 'tinfo';
+    const tt = document.createElement('div'); tt.className = 'tt'; tt.textContent = t('st_' + st);
+    info.appendChild(tt);
+    if (doneAt[st]) { const td = document.createElement('div'); td.className = 'td'; td.textContent = fmtDate(doneAt[st]); info.appendChild(td); }
+    if (i <= curIdx) { const tp = document.createElement('div'); tp.className = 'tp'; tp.textContent = stepCopy(st, data); info.appendChild(tp); }
+    row.appendChild(rail); row.appendChild(info);
+    tl.appendChild(row);
+  });
+}
+
+let busy = false;
+async function check() {
+  if (busy) return;
+  const ref = $('t_ref').value.trim().toUpperCase();
+  const dob = $('t_dob').value;
+  $('t_err').classList.remove('on');
+  let bad = false;
+  if (!/^FC-\d{4}-\d{5}$/.test(ref)) { $('t_ref').classList.add('bad'); bad = true; }
+  if (!dob) { $('t_dob').classList.add('bad'); bad = true; }
+  if (bad) return;
+  busy = true;
+  $('t_btn').setAttribute('aria-disabled', 'true');
+  $('t_btn').innerHTML = '<span class="spin"></span>' + t('tr_checking');
+  try {
+    const r = await fetch(FN + '/scn-track', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ref, dob }),
+    });
+    const j = await r.json();
+    if (!j.ok) throw new Error('nf');
+    render(j);
+  } catch (e) {
+    $('result').style.display = 'none';
+    $('t_err').textContent = t('tr_notfound');
+    $('t_err').classList.add('on');
+  }
+  busy = false;
+  $('t_btn').removeAttribute('aria-disabled');
+  $('t_btn').textContent = t('tr_btn');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  $('t_btn').textContent = t('tr_btn');
+  $('t_btn').addEventListener('click', check);
+  ['t_ref', 't_dob'].forEach((id) => $(id).addEventListener('input', () => $(id).classList.remove('bad')));
+  $('t_ref').addEventListener('input', () => { $('t_ref').value = $('t_ref').value.toUpperCase(); });
+  const ref = new URLSearchParams(location.search).get('ref');
+  if (ref) $('t_ref').value = ref.toUpperCase();
+});
+document.addEventListener('langchange', () => {
+  $('t_btn').textContent = busy ? t('tr_checking') : t('tr_btn');
+  if (lastResult) render(lastResult);
+});
+</script>
+</body>
+</html>

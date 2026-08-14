@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apply — Fine Care Food Support</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800;12..96,900&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <a href="index.html"><img class="logo" src="fc-logo.png" alt="Fine Care Pharmacy"></a>
+    <div class="brand"><span data-i18n="tagline"></span></div>
+    <nav>
+      <a class="nl" href="index.html" data-i18n="nav_home"></a>
+      <a class="nl on" href="apply.html" data-i18n="nav_apply"></a>
+      <a class="nl" href="track.html" data-i18n="nav_track"></a>
+      <div class="lang"><button data-lang="en">EN</button><button data-lang="es">ES</button></div>
+    </nav>
+  </div>
+</header>
+
+<div class="app" id="wizard">
+  <div class="lockline">🔒 <span data-i18n="lock"></span></div>
+  <div class="strip" id="stepStrip"></div>
+  <div class="dots" id="dots"></div>
+  <h2 id="stepTitle" style="margin:14px 0 14px"></h2>
+
+  <div class="fcard">
+
+    <!-- STEP 1 · APPLICANT -->
+    <div class="wstep on" data-step="1">
+      <div class="grid2">
+        <div><label><span data-i18n="fn"></span> <span class="req">*</span></label><input id="f_first" autocomplete="given-name"></div>
+        <div><label><span data-i18n="ln"></span> <span class="req">*</span></label><input id="f_last" autocomplete="family-name"></div>
+      </div>
+      <label><span data-i18n="dob"></span> <span class="req">*</span></label>
+      <input id="f_dob" type="date" max="2026-12-31">
+      <label><span data-i18n="cin"></span> <span class="req">*</span></label>
+      <input id="f_cin" maxlength="8" style="text-transform:uppercase" placeholder="AB12345C" autocapitalize="characters">
+      <div class="hint" data-i18n="cin_hint"></div>
+      <label><span data-i18n="phone"></span> <span class="req">*</span></label>
+      <input id="f_phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(718) 555-0100">
+      <div class="checks"><label><input type="checkbox" id="f_sms"> <span data-i18n="sms_q"></span></label></div>
+      <div class="sms-fine" data-i18n="sms_fine"></div>
+      <label><span data-i18n="addr"></span> <span class="req">*</span></label>
+      <input id="f_addr" autocomplete="street-address" placeholder="380 Knickerbocker Ave, Apt 2">
+      <label><span data-i18n="csz"></span> <span class="req">*</span></label>
+      <input id="f_csz" placeholder="Brooklyn, NY 11237">
+      <label data-i18n="email"></label>
+      <input id="f_email" type="email" autocomplete="email">
+    </div>
+
+    <!-- STEP 2 · HOUSING -->
+    <div class="wstep" data-step="2">
+      <label><span data-i18n="liv"></span> <span class="req">*</span></label>
+      <select id="f_living">
+        <option value="" data-i18n="choose"></option>
+        <option value="renting" data-i18n="liv1"></option>
+        <option value="own" data-i18n="liv2"></option>
+        <option value="family" data-i18n="liv3"></option>
+        <option value="shelter" data-i18n="liv4"></option>
+        <option value="other" data-i18n="liv5"></option>
+      </select>
+      <label><span data-i18n="h_pay"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="housingPay"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label><span data-i18n="h_util"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="utilityShutoff"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label data-i18n="h_prob"></label>
+      <div class="checks" id="homeProblems">
+        <label><input type="checkbox" value="pests"> <span data-i18n="hp1"></span></label>
+        <label><input type="checkbox" value="mold"> <span data-i18n="hp2"></span></label>
+        <label><input type="checkbox" value="lead"> <span data-i18n="hp3"></span></label>
+        <label><input type="checkbox" value="heat"> <span data-i18n="hp4"></span></label>
+        <label><input type="checkbox" value="stove"> <span data-i18n="hp5"></span></label>
+        <label><input type="checkbox" value="smoke"> <span data-i18n="hp6"></span></label>
+        <label><input type="checkbox" value="leaks"> <span data-i18n="hp7"></span></label>
+        <label><input type="checkbox" value="fridge"> <span data-i18n="hp8"></span></label>
+        <label><input type="checkbox" value="none"> <span data-i18n="hp9"></span></label>
+      </div>
+      <label><span data-i18n="h_wait"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="housingWaitlist"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+    </div>
+
+    <!-- STEP 3 · BENEFITS -->
+    <div class="wstep" data-step="3">
+      <label><span data-i18n="b_snap"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="snap"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label><span data-i18n="b_wic"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="wic"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label><span data-i18n="b_tanf"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="tanf"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label><span data-i18n="b_hh"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="healthHome"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label data-i18n="b_hh_which"></label>
+      <input id="f_healthHomeName">
+      <label><span data-i18n="b_job"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="jobHelp"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label><span data-i18n="b_school"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="schoolHelp"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label><span data-i18n="b_transport"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="transportBarrier"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+    </div>
+
+    <!-- STEP 4 · HEALTH -->
+    <div class="wstep" data-step="4">
+      <label><span data-i18n="he_chronic"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="chronic"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label data-i18n="he_tell"></label>
+      <textarea id="f_chronicDetail" rows="2"></textarea>
+      <label><span data-i18n="he_fridge"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="fridgeMeds"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label><span data-i18n="he_preg"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="pregnant"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label data-i18n="he_due"></label>
+      <input id="f_dueDate" type="date">
+      <label><span data-i18n="he_stairs"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="mobility"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+    </div>
+
+    <!-- STEP 5 · FOOD -->
+    <div class="wstep" data-step="5">
+      <label><span data-i18n="fo_meals"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="existingMeals"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label><span data-i18n="fo_allergy"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="allergies"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label data-i18n="fo_diet"></label>
+      <input id="f_dietDetail">
+      <label data-i18n="fo_need"></label>
+      <div class="checks" id="equipNeeds">
+        <label><input type="checkbox" value="refrigerator"> <span data-i18n="fon1"></span></label>
+        <label><input type="checkbox" value="microwave"> <span data-i18n="fon2"></span></label>
+        <label><input type="checkbox" value="cooking"> <span data-i18n="fon3"></span></label>
+      </div>
+      <label><span data-i18n="fo_worry"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="foodWorry"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label><span data-i18n="fo_last"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="foodRanOut"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label><span data-i18n="fo_pref"></span> <span class="req">*</span></label>
+      <select id="f_mealPref">
+        <option value="" data-i18n="choose"></option>
+        <option value="none" data-i18n="mp1"></option>
+        <option value="halal" data-i18n="mp2"></option>
+        <option value="kosher" data-i18n="mp3"></option>
+        <option value="vegetarian" data-i18n="mp4"></option>
+        <option value="diabetic" data-i18n="mp5"></option>
+      </select>
+    </div>
+
+    <!-- STEP 6 · HOUSEHOLD -->
+    <div class="wstep" data-step="6">
+      <label style="margin-top:0"><span data-i18n="hh_label"></span></label>
+      <div class="hint"><span data-i18n="hh_hint"></span> <b data-i18n="hh_warn"></b></div>
+      <div id="members"></div>
+      <button type="button" class="addbtn" id="addMember" data-i18n="hh_add"></button>
+      <label><span data-i18n="hh_transfer"></span> <span class="req">*</span></label>
+      <div class="yn" data-q="transfer"><button type="button" data-v="yes" data-i18n="yes"></button><button type="button" data-v="no" data-i18n="no"></button></div>
+      <label data-i18n="hh_comments"></label>
+      <textarea id="f_comments" rows="3"></textarea>
+      <div class="hint" style="margin-top:14px" data-i18n="one_hh"></div>
+    </div>
+
+    <div class="errline" id="errline"></div>
+    <div class="wnav">
+      <button type="button" class="back" id="btnBack" data-i18n="back" style="display:none"></button>
+      <button type="button" class="cta" id="btnNext" style="font-size:15px; padding:12px 22px"></button>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="app" id="doneView" style="display:none">
+  <div class="fcard done-wrap">
+    <div class="strip" style="border-color:var(--blue); color:var(--blue)">✓ FINE CARE FOOD SUPPORT</div>
+    <h2 style="margin:14px 0 4px" data-i18n="done_h"></h2>
+    <p style="color:#334560" data-i18n="done_p1"></p>
+    <div class="bigref" id="refOut"></div>
+    <p style="color:#334560" data-i18n="done_p2"></p>
+    <p style="margin-top:16px"><a class="cta" id="trackLink" href="track.html" data-i18n="done_track"></a></p>
+  </div>
+</div>
+
+<footer>
+  <div class="fwrap">
+    <img src="fc-logo.png" alt="Fine Care Pharmacy" style="height:34px; width:auto">
+    <div class="grow">380 Knickerbocker Ave, Brooklyn, NY 11237 · (718) 676-9976<br><span data-i18n="foot_tag"></span></div>
+    <div class="flinks"><a href="#" data-i18n="foot_privacy"></a><a href="#" data-i18n="foot_sms"></a><a href="track.html" data-i18n="foot_track"></a></div>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script>
+/* Same envelope as the refill portal: AES-GCM payload, key wrapped with the
+   store's RSA public key. Encrypted before it leaves this device. */
+const PUB_KEY_B64 = 'MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAvmGqbFmirSytH921UnBc7xzmzxoLgSPVvF3I12Zsq0fJrlYp94UdYzJ9c43zujm/fBq68sSEs+g1c86E30Y2YSCaG5ZbQmoO8/uLYbaYbULaloKVbPY2EJCmn3sdT3ZBmj1EXe9HybP2eM+uJ94HNAU1qNTeNI5+mFvYBH909AEtQ9QV+haIcds6/PmeQAQWzttbGQQMTf7JXu3Dx3+brWuXXYGIXbU0eeovUnURxQOryTaHSUjTu/77kzoB3SJcn8MFIADhDi5m2a4Z4cKz3oaVEd5MWid9b57CIi3ESkNK5WzFfKrseDlVm5ogWFJWi0d9GiAiqy6x2CCrAHSBjbgooqX2H/JUgmdIXU1Yuz5kSCMbb+cckNatFglq9pjnXivPpRKs9onj261VDvK63iwZfd7C0YLzWjwYcJw2fPM83icKD6zqLfKyH8yzfS2MZ2beE9NluETVDolFq6Yi7blN5eeY0+RgTdng03g9m0XUhMenPoOy/ipd5kNfeKMaPEIqdXQmYSrbR2zvUnQ4bJVJfB5qsaH/V5qR/05JCQcK4YwkRiBkuB3f0cRvRptho4XMtrP3DrfvwSVRLooHTnT+498Z2tuv/ijTzhfIR+pQKDxzZrVmjyW7boJsaHsQpUGKiAHwnv+DgCH1DONsD5aXRw2XlXE24VkhVbpg7BUCAwEAAQ==';
+const FN = 'https://airmehkgolmtgctmhqaq.supabase.co/functions/v1';
+const b64ToBuf = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+const bufToB64 = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
+async function encryptEnvelope(obj) {
+  const pubKey = await crypto.subtle.importKey('spki', b64ToBuf(PUB_KEY_B64), { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['encrypt']);
+  const aesKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt']);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const data = new TextEncoder().encode(JSON.stringify(obj));
+  const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, aesKey, data);
+  const rawAes = await crypto.subtle.exportKey('raw', aesKey);
+  const wrapped = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, pubKey, rawAes);
+  return JSON.stringify({ v: 1, k: bufToB64(wrapped), iv: bufToB64(iv), d: bufToB64(ct) });
+}
+
+/* ---------- wizard state ---------- */
+const A = { yn: {} };          // yes/no answers by question key
+let step = 1; const LAST = 6;
+const $ = (id) => document.getElementById(id);
+
+function paintDots() {
+  $('dots').innerHTML = '';
+  for (let i = 1; i <= LAST; i++) { const d = document.createElement('i'); if (i <= step) d.className = 'done'; $('dots').appendChild(d); }
+  $('stepStrip').textContent = t('step_of').replace('{n}', step) + ' · ' + t('wz' + step);
+  $('stepTitle').textContent = t('wt' + step);
+  document.querySelectorAll('.wstep').forEach((s) => s.classList.toggle('on', Number(s.dataset.step) === step));
+  $('btnBack').style.display = step === 1 ? 'none' : '';
+  $('btnNext').textContent = step === LAST ? t('submit') : t('cont');
+  $('errline').classList.remove('on');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+document.addEventListener('langchange', paintDots);
+
+/* yes/no toggles */
+document.querySelectorAll('.yn').forEach((group) => {
+  group.querySelectorAll('button').forEach((btn) => btn.addEventListener('click', () => {
+    A.yn[group.dataset.q] = btn.dataset.v;
+    group.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b === btn));
+    group.classList.remove('bad');
+  }));
+});
+document.querySelectorAll('input, select, textarea').forEach((el) =>
+  el.addEventListener('input', () => el.classList.remove('bad')));
+$('f_cin').addEventListener('input', () => { $('f_cin').value = $('f_cin').value.toUpperCase(); });
+
+/* household members */
+let memberSeq = 0;
+function addMemberRow() {
+  const id = ++memberSeq;
+  const div = document.createElement('div');
+  div.className = 'member'; div.dataset.mid = id;
+  div.innerHTML =
+    '<button type="button" class="rm" aria-label="remove">✕</button>' +
+    '<div class="grid2">' +
+    '<div><label style="margin-top:0" data-i18n="hh_name"></label><input class="m_name"></div>' +
+    '<div><label style="margin-top:0" data-i18n="hh_cin"></label><input class="m_cin" maxlength="8" style="text-transform:uppercase"></div>' +
+    '<div><label data-i18n="hh_dob"></label><input class="m_dob" type="date"></div>' +
+    '<div><label data-i18n="hh_rel"></label><input class="m_rel"></div>' +
+    '</div>';
+  div.querySelector('.rm').addEventListener('click', () => div.remove());
+  div.querySelectorAll('input').forEach((el) => el.addEventListener('input', () => el.classList.remove('bad')));
+  $('members').appendChild(div);
+  div.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
+}
+$('addMember').addEventListener('click', addMemberRow);
+addMemberRow();
+
+/* ---------- validation ---------- */
+const CIN_RE = /^[A-Za-z]{2}\d{5}[A-Za-z]$/;
+function markBad(el) { el.classList.add('bad'); return el; }
+function validateStep(n) {
+  let firstBad = null; let msg = 'err_req';
+  const need = (el, ok) => { if (!ok) { markBad(el); if (!firstBad) firstBad = el; } };
+  const needYn = (q) => {
+    if (!A.yn[q]) { const g = document.querySelector('.yn[data-q="' + q + '"]'); g.classList.add('bad'); if (!firstBad) firstBad = g; }
+  };
+  if (n === 1) {
+    need($('f_first'), $('f_first').value.trim().length > 0);
+    need($('f_last'), $('f_last').value.trim().length > 0);
+    need($('f_dob'), !!$('f_dob').value);
+    const cin = $('f_cin').value.trim();
+    if (!cin) { need($('f_cin'), false); }
+    else if (!CIN_RE.test(cin)) { markBad($('f_cin')); if (!firstBad) { firstBad = $('f_cin'); msg = 'err_cin'; } }
+    need($('f_phone'), $('f_phone').value.replace(/\D/g, '').length >= 10);
+    need($('f_addr'), $('f_addr').value.trim().length > 0);
+    need($('f_csz'), $('f_csz').value.trim().length > 0);
+  }
+  if (n === 2) { need($('f_living'), !!$('f_living').value); ['housingPay', 'utilityShutoff', 'housingWaitlist'].forEach(needYn); }
+  if (n === 3) { ['snap', 'wic', 'tanf', 'healthHome', 'jobHelp', 'schoolHelp', 'transportBarrier'].forEach(needYn); }
+  if (n === 4) { ['chronic', 'fridgeMeds', 'pregnant', 'mobility'].forEach(needYn); }
+  if (n === 5) { ['existingMeals', 'allergies', 'foodWorry', 'foodRanOut'].forEach(needYn); need($('f_mealPref'), !!$('f_mealPref').value); }
+  if (n === 6) { needYn('transfer'); }
+  if (firstBad) {
+    $('errline').textContent = t(msg); $('errline').classList.add('on');
+    firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return false;
+  }
+  return true;
+}
+
+/* ---------- assemble + submit ---------- */
+function checkedValues(containerId) {
+  return [...document.querySelectorAll('#' + containerId + ' input:checked')].map((c) => c.value);
+}
+function collectPayload() {
+  const members = [...document.querySelectorAll('.member')].map((m) => ({
+    name: m.querySelector('.m_name').value.trim(),
+    cin: m.querySelector('.m_cin').value.trim().toUpperCase(),
+    dob: m.querySelector('.m_dob').value,
+    relationship: m.querySelector('.m_rel').value.trim(),
+  })).filter((m) => m.name || m.cin || m.dob || m.relationship);
+  return {
+    program: 'scn-food-support', version: 1, lang: LANG, submittedAt: new Date().toISOString(),
+    applicant: {
+      first: $('f_first').value.trim(), last: $('f_last').value.trim(), dob: $('f_dob').value,
+      cin: $('f_cin').value.trim().toUpperCase(), phone: $('f_phone').value.trim(),
+      smsConsent: $('f_sms').checked,
+      address: $('f_addr').value.trim(), cityStateZip: $('f_csz').value.trim(),
+      email: $('f_email').value.trim(),
+    },
+    housing: {
+      living: $('f_living').value, strugglesToPay: A.yn.housingPay, utilityShutoffThreat: A.yn.utilityShutoff,
+      problems: checkedValues('homeProblems'), waitlistOrSubsidy: A.yn.housingWaitlist,
+    },
+    benefits: {
+      snap: A.yn.snap, wic: A.yn.wic, tanf: A.yn.tanf,
+      healthHome: A.yn.healthHome, healthHomeName: $('f_healthHomeName').value.trim(),
+      jobHelp: A.yn.jobHelp, schoolHelp: A.yn.schoolHelp, transportBarrier: A.yn.transportBarrier,
+    },
+    health: {
+      chronic: A.yn.chronic, chronicDetail: $('f_chronicDetail').value.trim(),
+      fridgeMeds: A.yn.fridgeMeds, pregnant: A.yn.pregnant, dueDate: $('f_dueDate').value,
+      mobilityDifficulty: A.yn.mobility,
+    },
+    food: {
+      existingMealsProgram: A.yn.existingMeals, allergies: A.yn.allergies, dietDetail: $('f_dietDetail').value.trim(),
+      equipmentNeeds: checkedValues('equipNeeds'), worryFoodRunOut: A.yn.foodWorry,
+      foodDidNotLast: A.yn.foodRanOut, mealPreference: $('f_mealPref').value,
+    },
+    household: { members, isTransfer: A.yn.transfer, comments: $('f_comments').value.trim() },
+  };
+}
+
+let sending = false;
+async function submitApp() {
+  if (sending) return;
+  sending = true;
+  const btn = $('btnNext');
+  btn.setAttribute('aria-disabled', 'true');
+  btn.innerHTML = '<span class="spin"></span>' + t('submitting');
+  try {
+    const payload = collectPayload();
+    const ciphertext = await encryptEnvelope(payload);
+    const r = await fetch(FN + '/scn-apply', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ciphertext, dob: payload.applicant.dob, lang: LANG }),
+    });
+    const j = await r.json();
+    if (!j.ok || !j.ref) throw new Error(j.error || 'send');
+    $('refOut').textContent = j.ref;
+    $('trackLink').href = 'track.html?ref=' + encodeURIComponent(j.ref);
+    $('wizard').style.display = 'none';
+    $('doneView').style.display = '';
+    window.scrollTo({ top: 0 });
+  } catch (e) {
+    $('errline').textContent = t('err_send'); $('errline').classList.add('on');
+    btn.removeAttribute('aria-disabled'); btn.textContent = t('submit');
+    sending = false;
+  }
+}
+
+$('btnNext').addEventListener('click', () => {
+  if (!validateStep(step)) return;
+  if (step < LAST) { step++; paintDots(); } else { submitApp(); }
+});
+$('btnBack').addEventListener('click', () => { if (step > 1) { step--; paintDots(); } });
+document.addEventListener('DOMContentLoaded', paintDots);
+</script>
+</body>
+</html>
